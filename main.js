@@ -9,7 +9,6 @@ const client = new Discord.Client({
         Discord.GatewayIntentBits.GuildMessageReactions
     ]
 });
-const {clientPG} = require("./database.js");
 
 client.login(config.token);
 
