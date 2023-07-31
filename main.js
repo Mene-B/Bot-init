@@ -9,9 +9,24 @@ const client = new Discord.Client({
         Discord.GatewayIntentBits.GuildMessageReactions
     ]
 });
+const fs = require("fs");
 
 client.login(config.token);
 
 client.on("ready",()=>{
   console.log("Bot ready to work hard !");
 });
+
+const commands = fs.readdirSync("./slash-commands").map((file)=>{
+    const data = require("./slash-commands/"+file);
+    return {name : data.data.name, run: data.run };
+});
+
+client.on("interactionCreate",(interaction)=>{
+    if(interaction.isCommand()){
+        const command = commands.find((cmd)=>{
+            return cmd.name === interaction.commandName;
+        })
+        return command.run(interaction);
+    }
+})
