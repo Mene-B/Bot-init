@@ -1,32 +1,12 @@
-const Discord = require("discord.js");
-const config= require("./config.json");
-const client = new Discord.Client({
-    intents: [
-        Discord.GatewayIntentBits.Guilds,
-        Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.MessageContent,
-        Discord.GatewayIntentBits.GuildMessageReactions
-    ]
-});
-const fs = require("fs");
+const {SlashCommandBuilder} = require("discord.js");
+const {clientPG} = require("../database.js");
 
-client.login(config.token);
+module.exports = {
+  data: new SlashCommandBuilder()
+  .setName("command")
+  .setDescription("Some description"),
+  run: function(interaction){
+    console.log(interaction.commandName);
+  }
 
-client.on("ready",()=>{
-  console.log("Bot ready to work hard !");
-});
-
-const commands = fs.readdirSync("./slash-commands").map((file)=>{
-    const data = require("./slash-commands/"+file);
-    return {name : data.data.name, run: data.run };
-});
-
-client.on("interactionCreate",(interaction)=>{
-    if(interaction.isCommand()){
-        const command = commands.find((cmd)=>{
-            return cmd.name === interaction.commandName;
-        })
-        return command.run(interaction);
-    }
-})
+}
